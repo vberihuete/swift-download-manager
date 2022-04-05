@@ -16,7 +16,6 @@ protocol DownloadInteractorProtocol {
         interruptedDownload: InterruptedDownload,
         completion: @escaping (Result<CompletedDownload, DownloadError>) -> Void
     )
-    func getDownloadProgress(download: Download) -> Double
     func getDownloadedData(with identifier: String) -> Data?
     func getDownloadDataUrl(with identifier: String) -> URL?
 }
@@ -86,10 +85,6 @@ final class DownloadInteractor: DownloadInteractorProtocol {
         )
         guard let localPath = completedDownload?.localPath else { return nil }
         return fileManager.getFileUrl(lastPathComponent: localPath)
-    }
-
-    func getDownloadProgress(download: Download) -> Double {
-        downloadProgress[download] ?? 0.0
     }
 
     deinit {

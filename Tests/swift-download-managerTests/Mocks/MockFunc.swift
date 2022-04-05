@@ -10,6 +10,7 @@ import Foundation
 final class MockFunc<In, Out> {
     var parameters: [In] = []
     var result: () -> Out = { fatalError() }
+    var invokedCount = 0
 
     static func mock(for function: (In) throws -> Out) -> MockFunc {
         return MockFunc()
@@ -21,6 +22,7 @@ final class MockFunc<In, Out> {
     }
 
     func callAndReturn(_ input: In) -> Out {
+        invokedCount += 1
         parameters.append(input)
         return result()
     }
