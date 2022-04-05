@@ -42,7 +42,9 @@ final class DownloadInteractor: DownloadInteractorProtocol {
     convenience init() {
         self.init(
             downloadRepository: DownloadRepository(),
-            observableDownloadInteractor: ObservableURLDownloadTaskInteractor(),
+            observableDownloadInteractor: ObservableURLDownloadTaskInteractor(
+                urlSessionService: URLSessionService()
+            ),
             fileManager: FileManagerInteractor()
         )
     }
@@ -128,7 +130,6 @@ private extension DownloadInteractor {
                 self?.downloadTasks[download]?.completion(.success(completedDownload))
             case let .progress(downloadTask, progress):
                 guard let download = download(using: downloadTask) else { return }
-//                self?.downloadProgress[download] = progress
                 downloadRepository.addDownloadProgress(download: download, progress: progress)
             case let .error(downloadTask, resumeData):
                 guard let download = download(using: downloadTask), let resumeData = resumeData else { return }

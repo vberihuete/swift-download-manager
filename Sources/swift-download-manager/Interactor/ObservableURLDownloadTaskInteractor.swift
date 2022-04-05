@@ -11,34 +11,25 @@ protocol ObservableURLDownloadTaskInteractorProtocol: AnyObject {
     var didReportAction: (ObservableDownloadAction) -> Void { get set }
     func download(from url: URL) -> URLSessionDownloadTask
     func resumeDownload(data: Data) -> URLSessionDownloadTask
-//    func finish()
 }
 
 final class ObservableURLDownloadTaskInteractor: NSObject, ObservableURLDownloadTaskInteractorProtocol {
-//    private var activeTasks: [URLSessionTask] = []
+    private let urlSessionService: URLSessionServiceProtocol
+
+    init(
+        urlSessionService: URLSessionServiceProtocol
+    ) {
+        self.urlSessionService = urlSessionService
+    }
     var didReportAction: (ObservableDownloadAction) -> Void = { _ in }
 
     func download(from url: URL) -> URLSessionDownloadTask {
-        let urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        let downloadTask = urlSession.downloadTask(with: url)
-        downloadTask.resume()
-        urlSession.finishTasksAndInvalidate()
-//        activeTasks.append(downloadTask)
-        return downloadTask
+        return urlSessionService.downloadTask(with: url, delegate: self)
     }
 
     func resumeDownload(data: Data) -> URLSessionDownloadTask {
-        let urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        let downloadTask = urlSession.downloadTask(withResumeData: data)
-        downloadTask.resume()
-        urlSession.finishTasksAndInvalidate()
-//        activeTasks.append(downloadTask)
-        return downloadTask
+        return urlSessionService.resumeDownload(data: data, delegate: self)
     }
-
-//    func finish() {
-//        urlSession.finishTasksAndInvalidate()
-//    }
 }
 
 // MARK: - URL Session Delegate

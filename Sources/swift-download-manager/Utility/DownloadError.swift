@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum DownloadError: Error, Equatable {
+public enum DownloadError: Error, Equatable {
     case generic
     case invalidUrl
     case invalidResumeData

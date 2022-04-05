@@ -6,11 +6,16 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
-// same should work for 3d assets, search only how to parse a 3d asset to a data model
+#endif
 
-final class ImageDownloaderInteractor {
+public final class ImageDownloaderInteractor {
     private let downloadInteractor: DownloadInteractorProtocol
+
+    public convenience init() {
+        self.init(downloadInteractor: DownloadInteractor())
+    }
 
     init(
         downloadInteractor: DownloadInteractorProtocol = DownloadInteractor()
@@ -18,15 +23,13 @@ final class ImageDownloaderInteractor {
         self.downloadInteractor = downloadInteractor
     }
 
-    // review this methods later.. I'm writting them at the last minute of my working day
-
-    func getImage(with identifier: String) -> UIImage? {
+    public func getImage(with identifier: String) -> UIImage? {
         downloadInteractor.getDownloadedData(with: identifier).flatMap {
             UIImage(data: $0)
         }
     }
 
-    func getOrDownloadImage(remoteUrl url: URL, completion: @escaping (Result<UIImage, DownloadError>) -> Void) {
+    public func getOrDownloadImage(remoteUrl url: URL, completion: @escaping (Result<UIImage, DownloadError>) -> Void) {
         if let image = getImage(with: url.absoluteString) {
             completion(.success(image))
         } else {

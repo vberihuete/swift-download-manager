@@ -9,16 +9,23 @@ import Foundation
 import RealityKit
 
 @available(iOS 13, *)
-final class EntityDownloadInteractor {
+public final class EntityDownloadInteractor {
     private let downloadInteractor: DownloadInteractorProtocol
 
+    public convenience init() {
+        self.init(downloadInteractor: DownloadInteractor())
+    }
+
     init(
-        downloadInteractor: DownloadInteractorProtocol = DownloadInteractor()
+        downloadInteractor: DownloadInteractorProtocol
     ) {
         self.downloadInteractor = downloadInteractor
     }
 
-    func getOrDownloadEntity(remoteUrl url: URL, completion: @escaping (Result<ModelEntity, DownloadError>) -> Void) {
+    public func getOrDownloadEntity(
+        remoteUrl url: URL,
+        completion: @escaping (Result<ModelEntity, DownloadError>) -> Void
+    ) {
         if let localUrl = downloadInteractor.getDownloadDataUrl(with: url.absoluteString) {
             loadEntity(url: localUrl, completion: completion)
         } else {
